@@ -1,0 +1,21 @@
+name: Keep GitHub Streak
+
+on:
+  schedule:
+    - cron: "0 12 * * *"  # runs daily at 12:00 UTC
+  workflow_dispatch:      # lets you run manually too
+
+jobs:
+  commit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Run script
+        run: python update.py
+      - name: Commit changes
+        run: |
+          git config --local user.email "actions@github.com"
+          git config --local user.name "GitHub Action"
+          git add status.md
+          git commit -m "Auto update streak" || echo "No changes to commit"
+          git push
